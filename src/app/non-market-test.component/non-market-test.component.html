@@ -143,19 +143,27 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field
-              appearance="outline"
-              class="w-full bg-slate-900/60 rounded-lg"
-            >
-              <mat-label>Buy Threshold (optional)</mat-label>
+<mat-form-field appearance="outline" class="w-full">
+  <mat-label>Buy Threshold (optional)</mat-label>
   <input
     matInput
     type="number"
     [(ngModel)]="fakeThreshold"
     placeholder="e.g. 25900"
-    class="text-slate-100 placeholder-slate-500"
+    name="buyThreshold"
+    [style.color]="'#ffffff'"
+    [style.caretColor]="'#ffffff'"
+    [style.backgroundColor]="'transparent'"
   />
-            </mat-form-field>
+</mat-form-field>
+
+<div class="mt-1 text-[10px] text-slate-300">
+  Current buyThreshold:
+  <span class="font-mono text-slate-100">
+    {{ fakeThreshold ?? '—' }}
+  </span>
+</div>
+
 
             <button
               mat-raised-button
@@ -189,23 +197,30 @@
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-[2fr,1fr] gap-3">
-            <mat-form-field
-              appearance="outline"
-              class="w-full bg-slate-900/60 rounded-lg"
-            >
-              <mat-label>Fake LTP</mat-label>
+<mat-form-field appearance="outline" class="w-full">
+  <mat-label>Fake LTP</mat-label>
   <input
     matInput
     type="number"
     [(ngModel)]="fakeLtp"
     placeholder="e.g. 25910"
-    class="text-slate-100 placeholder-slate-500"
+    name="fakeLtp"
+    [style.color]="'#ffffff'"
+    [style.caretColor]="'#ffffff'"
+    [style.backgroundColor]="'transparent'"
   />
-            </mat-form-field>
+</mat-form-field>
+
+<div class="mt-1 text-[10px] text-slate-300">
+  Current fakeLtp:
+  <span class="font-mono text-slate-100">
+    {{ fakeLtp ?? '—' }}
+  </span>
+</div>
 
             <button
               mat-raised-button
-              color="accent"
+              color="primary"
               class="h-11 font-medium shadow-md shadow-emerald-500/30"
               (click)="sendFakeLtp()"
               [disabled]="!selectedSymbol || fakeLtp == null"

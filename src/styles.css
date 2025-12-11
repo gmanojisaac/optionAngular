@@ -1,11 +1,50 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import "tailwindcss";
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
 /* Make mat-select value text visible on dark background */
 .mdc-text-field .mat-mdc-select-value-text,
 .mat-mdc-select-placeholder {
   color: #e5e7eb !important; /* Tailwind slate-200 */
+}
+
+/* Dark mode for all outlined mat-form-fields (inputs + selects) */
+.mdc-text-field--outlined {
+  --mdc-outlined-text-field-outline-color: #4b5563 !important;
+  --mdc-outlined-text-field-hover-outline-color: #64748b !important;
+  --mdc-outlined-text-field-focus-outline-color: #3b82f6 !important;
+
+  --mdc-outlined-text-field-label-text-color: #cbd5e1 !important;
+
+  --mdc-outlined-text-field-input-text-color: #f1f5f9 !important;
+  --mdc-outlined-text-field-caret-color: #3b82f6 !important;
+
+  --mdc-outlined-text-field-placeholder-text-color: #64748b !important;
+}
+
+/* ---- Dark-mode overrides for Angular Material buttons ---- */
+.mat-mdc-raised-button.mat-primary {
+  background-color: #2563eb !important;
+  color: #e5e7eb !important;
+}
+
+.mat-mdc-raised-button.mat-accent {
+  background-color: #22c55e !important;
+  color: #0f172a !important;
+}
+
+.mat-mdc-raised-button.mat-primary.mat-mdc-button-disabled,
+.mat-mdc-raised-button.mat-accent.mat-mdc-button-disabled {
+  background-color: #1e293b !important;
+  color: #6b7280 !important;
+}
+
+.mat-mdc-outlined-button {
+  border-color: #64748b !important;
+  color: #e5e7eb !important;
+}
+
+.mat-mdc-outlined-button:hover {
+  background-color: rgba(148, 163, 184, 0.12) !important;
 }
