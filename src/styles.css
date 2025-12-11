@@ -1,3 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "tailwindcss";
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Make mat-select value text visible on dark background */
+.mdc-text-field .mat-mdc-select-value-text,
+.mat-mdc-select-placeholder {
+  color: #e5e7eb !important; /* Tailwind slate-200 */
+}

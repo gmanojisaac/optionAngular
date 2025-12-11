@@ -59,4 +59,22 @@ export class TradingStateService {
   }): Observable<any> {
     return this.http.post(`${this.baseUrl}/trade`, payload);
   }
+
+    /** Send a fake TradingView signal to the Node server */
+  sendTvSignal(payload: {
+    symbol: string;
+    signal: 'BUY' | 'SELL';
+    buyThreshold?: number;
+  }) {
+    return this.http.post(`${this.baseUrl}/tv-signal`, payload);
+  }
+
+  /** Optional: send fake LTP to server (you add /fake-ltp on Node side) */
+  sendFakeLtp(payload: { symbol: string; ltp: number }) {
+    return this.http.post(`${this.baseUrl}/fake-ltp`, payload);
+  }
+
+  
 }
+
+

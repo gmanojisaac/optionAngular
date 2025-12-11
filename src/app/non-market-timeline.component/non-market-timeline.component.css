@@ -1,0 +1,86 @@
+.non-market-timeline {
+  padding: 8px;
+}
+
+.hour-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.hour-label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.timeline-container {
+  display: flex;
+  gap: 16px;
+}
+
+.time-tree {
+  width: 220px;
+}
+
+.time-viewport {
+  height: 260px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.time-row {
+  padding: 2px 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.hour-row {
+  font-weight: 600;
+  background: #f7f7f7;
+}
+
+.minute-row {
+  padding-left: 16px;
+}
+
+.minute-row.selected {
+  background-color: rgba(25, 118, 210, 0.08);
+}
+
+.logs-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.logs-viewport {
+  height: 260px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.logs-table {
+  width: 100%;
+  font-size: 11px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.minute-tag {
+  margin-left: 8px;
+  padding: 2px 6px;
+  font-size: 11px;
+  background: rgba(25, 118, 210, 0.08);
+  border-radius: 4px;
+}
+
+.source-filter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}

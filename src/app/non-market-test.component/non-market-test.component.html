@@ -1,0 +1,240 @@
+<div
+  class="min-h-[calc(100vh-4rem)] bg-slate-900 text-slate-100 flex justify-center items-start p-6 overflow-y-auto"
+>
+  <div
+    class="w-full max-w-5xl bg-slate-800/80 border border-slate-700 rounded-2xl shadow-xl p-6 space-y-6"
+  >
+    <!-- Header -->
+    <div class="flex items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2">
+          <span class="h-6 w-1.5 rounded-full bg-blue-500"></span>
+          <h1 class="text-xl font-semibold tracking-tight">
+            Fake LTP &amp; Signal Test
+          </h1>
+        </div>
+        <p class="mt-1 text-xs text-slate-300">
+          Drive the server FSM using test TradingView signals and synthetic LTP
+          during non-market hours (weekends, nights).
+        </p>
+      </div>
+
+      <div
+        class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-300 text-[11px] font-medium border border-emerald-500/30"
+      >
+        Non-market mode · 24×7
+      </div>
+    </div>
+
+    <!-- MAIN GRID: left = symbol + instruments list, right = signal + LTP -->
+    <div
+      class="grid grid-cols-1 lg:grid-cols-[2fr,3fr] gap-6 items-start bg-slate-900/40 rounded-2xl border border-slate-700/60 p-4"
+    >
+      <!-- LEFT: symbol + all instruments -->
+      <div class="space-y-4">
+        <div>
+          <h2 class="text-sm font-semibold text-slate-100">
+            1. Choose option instrument
+          </h2>
+          <p class="text-[11px] text-slate-400 leading-snug">
+            Instruments are loaded from the Node server
+            <span class="text-slate-200 font-mono text-[11px]">
+              INSTRUMENTS
+            </span>
+            array (NIFTY, BANKNIFTY, SENSEX legs).
+          </p>
+        </div>
+
+        <!-- Symbol selector -->
+<mat-form-field
+  appearance="outline"
+  class="w-full bg-slate-900/60 rounded-lg"
+>
+  <mat-label>Symbol</mat-label>
+
+  <mat-select
+    [(ngModel)]="selectedSymbol"
+    name="symbol"
+    (selectionChange)="onSymbolChange($event.value)"
+  >
+    @if (instruments$ | async; as instrs) {
+      @for (i of instrs; track i.symbol) {
+        <mat-option [value]="i.symbol">
+          {{ i.symbol }}
+        </mat-option>
+      }
+    }
+  </mat-select>
+</mat-form-field>
+
+
+        <!-- All instruments list (so you can see every entry clearly) -->
+        <div
+          class="rounded-xl border border-slate-700/70 bg-slate-900/70 p-3 space-y-2"
+        >
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-slate-200">
+              Loaded instruments
+            </span>
+            <span class="text-[10px] text-slate-400">
+              from server / INSTRUMENTS
+            </span>
+          </div>
+
+          <div class="max-h-40 overflow-y-auto text-[11px]">
+            @if (instruments$ | async; as instrs) {
+              @for (i of instrs; track i.symbol) {
+                <div
+                  class="flex justify-between gap-2 border-b border-slate-800/80 py-1 last:border-0"
+                >
+                  <div class="flex flex-col">
+                    <span class="font-medium text-slate-100">
+                      {{ i.symbol }}
+                    </span>
+                    <span class="text-slate-400">
+                      {{ i.exchange }} · {{ i.tradingsymbol }}
+                    </span>
+                  </div>
+                  <div class="text-right text-slate-400">
+                    <div>lot {{ i.lot }}</div>
+                    <div class="font-mono text-[10px]">
+                      token {{ i.token }}
+                    </div>
+                  </div>
+                </div>
+              }
+            } @else {
+              <div class="text-slate-500">Loading instruments…</div>
+            }
+          </div>
+        </div>
+
+        <p class="text-[11px] text-orange-300/80">
+          Tip: pick one leg and hammer it with different fake
+          signals/LTP to verify FSM behaviour before going
+          <span class="font-semibold">live</span>.
+        </p>
+      </div>
+
+      <!-- RIGHT: signal + LTP controls -->
+      <div class="space-y-4">
+        <!-- Fake TV signal -->
+        <div
+          class="rounded-xl border border-slate-700/70 bg-slate-900/70 p-4 space-y-3"
+        >
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-semibold text-slate-100">
+              2. Fake TradingView signal
+            </h2>
+            <span class="text-[10px] uppercase tracking-wide text-sky-300">
+              /tv-signal
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <mat-form-field
+              appearance="outline"
+              class="w-full bg-slate-900/60 rounded-lg"
+            >
+              <mat-label>Signal</mat-label>
+              <mat-select [(ngModel)]="fakeSignal">
+                <mat-option value="BUY">BUY</mat-option>
+                <mat-option value="SELL">SELL</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline"
+              class="w-full bg-slate-900/60 rounded-lg"
+            >
+              <mat-label>Buy Threshold (optional)</mat-label>
+  <input
+    matInput
+    type="number"
+    [(ngModel)]="fakeThreshold"
+    placeholder="e.g. 25900"
+    class="text-slate-100 placeholder-slate-500"
+  />
+            </mat-form-field>
+
+            <button
+              mat-raised-button
+              color="primary"
+              class="h-11 mt-1 md:mt-0 font-medium shadow-md shadow-blue-500/30"
+              (click)="sendFakeSignal()"
+              [disabled]="!selectedSymbol"
+            >
+              Send Fake Signal
+            </button>
+          </div>
+
+          <p class="text-[11px] text-slate-400">
+            BUY saves <span class="font-mono">buyThreshold / lastBuyThreshold</span>.
+            SELL sets <span class="font-mono">buyThreshold = ltp</span> on the
+            server and drives the re-enter logic.
+          </p>
+        </div>
+
+        <!-- Fake LTP -->
+        <div
+          class="rounded-xl border border-slate-700/70 bg-slate-900/70 p-4 space-y-3"
+        >
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-semibold text-slate-100">
+              3. Fake LTP tick
+            </h2>
+            <span class="text-[10px] uppercase tracking-wide text-emerald-300">
+              /fake-ltp
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-[2fr,1fr] gap-3">
+            <mat-form-field
+              appearance="outline"
+              class="w-full bg-slate-900/60 rounded-lg"
+            >
+              <mat-label>Fake LTP</mat-label>
+  <input
+    matInput
+    type="number"
+    [(ngModel)]="fakeLtp"
+    placeholder="e.g. 25910"
+    class="text-slate-100 placeholder-slate-500"
+  />
+            </mat-form-field>
+
+            <button
+              mat-raised-button
+              color="accent"
+              class="h-11 font-medium shadow-md shadow-emerald-500/30"
+              (click)="sendFakeLtp()"
+              [disabled]="!selectedSymbol || fakeLtp == null"
+            >
+              Push Fake LTP
+            </button>
+          </div>
+
+          <p class="text-[11px] text-slate-400">
+            Server treats this as if it came from KiteTicker, updates
+            <span class="font-mono">buyThresholdCondn</span>, and your Angular
+            FSM reacts via the normal polling cycle.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer hint -->
+    <div
+      class="flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-400"
+    >
+      <span>
+        Paper / livesim trades never reach Zerodha. Only explicit
+        <span class="font-mono text-rose-300">mode="live"</span> on the server
+        will place real orders.
+      </span>
+      <span class="text-slate-500">
+        Weekend mode: run this with the 24h timeline to replay full days.
+      </span>
+    </div>
+  </div>
+</div>

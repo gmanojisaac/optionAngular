@@ -1,0 +1,164 @@
+<mat-horizontal-stepper>
+  <!-- Step 1: Mode / overview -->
+  <mat-step label="Overview">
+    <div class="p-4 space-y-3">
+      <h2 class="text-lg font-semibold">FSM + Instruments</h2>
+      <p class="text-xs text-gray-600">
+        Live LTP from KiteTicker (or fake LTP), FSM in Angular, trades only sent
+        to Zerodha when mode="live" on server.
+      </p>
+
+@if (vm$ | async; as vm) {
+  @for (sym of $any(vm).symbols; track sym) {
+    <app-fsm-symbol-panel
+      [symbol]="sym"
+      [serverState]="$any(vm).serverState[sym]"
+      [clientState]="$any(vm).clientState[sym]">
+    </app-fsm-symbol-panel>
+  }
+}
+
+
+      <button mat-raised-button color="primary" matStepperNext>
+        Next: Fake inputs
+      </button>
+    </div>
+  </mat-step>
+
+  <!-- Step 2: Fake signals / LTP -->
+  <mat-step label="Fake signals">
+    <div class="p-4 space-y-3">
+      <h2 class="text-lg font-semibold">Fake TradingView / LTP</h2>
+
+      <!-- Instrument table -->
+      <div class="border rounded p-2">
+        <h3 class="font-semibold text-sm mb-1">Loaded instruments (6)</h3>
+       <table
+  mat-table
+  [dataSource]="(instruments$ | async) ?? []"
+  class="mat-elevation-z1 text-xs"
+>
+
+          <ng-container matColumnDef="symbol">
+            <th mat-header-cell *matHeaderCellDef> Symbol </th>
+            <td mat-cell *matCellDef="let row">{{ row.symbol }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="exchange">
+            <th mat-header-cell *matHeaderCellDef> Exch </th>
+            <td mat-cell *matCellDef="let row">{{ row.exchange }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="tradingsymbol">
+            <th mat-header-cell *matHeaderCellDef> TradingSymbol </th>
+            <td mat-cell *matCellDef="let row">{{ row.tradingsymbol }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="token">
+            <th mat-header-cell *matHeaderCellDef> Token </th>
+            <td mat-cell *matCellDef="let row">{{ row.token }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="lot">
+            <th mat-header-cell *matHeaderCellDef> Lot </th>
+            <td mat-cell *matCellDef="let row">{{ row.lot }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+
+      <!-- Fake control panel -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-end">
+        <mat-form-field appearance="outline">
+          <mat-label>Symbol</mat-label>
+          <mat-select [(value)]="selectedSymbol">
+            @if (instruments$ | async; as instrs) {
+              @for (i of instrs; track i.symbol) {
+                <mat-option [value]="i.symbol">{{ i.symbol }}</mat-option>
+              }
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Signal</mat-label>
+          <mat-select [(value)]="fakeSignal">
+            <mat-option value="BUY">BUY</mat-option>
+            <mat-option value="SELL">SELL</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Buy Threshold</mat-label>
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="fakeThreshold"
+            placeholder="Optional"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-end">
+        <mat-form-field appearance="outline">
+          <mat-label>Fake LTP</mat-label>
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="fakeLtp"
+            placeholder="e.g. 25900"
+          />
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="sendFakeSignal()">
+          Send Fake TV Signal
+        </button>
+
+        <button mat-raised-button color="accent" (click)="sendFakeLtp()">
+          Send Fake LTP
+        </button>
+      </div>
+
+      <button mat-stroked-button matStepperPrevious>Back</button>
+      <button mat-raised-button color="primary" matStepperNext>
+        Next: Timeline
+      </button>
+    </div>
+  </mat-step>
+
+  <!-- Step 3: Virtual scroll timeline -->
+  <mat-step label="Timeline">
+    <div class="p-4 space-y-3">
+      <h2 class="text-lg font-semibold">Second-by-second timeline</h2>
+      <p class="text-xs text-gray-600">
+        Trading day 9:15–15:30 ({{ seconds.length }} seconds) — scroll with CDK
+        virtual scroll. You can correlate times with fake signals & PnL.
+      </p>
+
+      <cdk-virtual-scroll-viewport
+        itemSize="24"
+        class="border h-80 overflow-auto"
+      >
+        <div
+          *cdkVirtualFor="let row of seconds"
+          class="flex justify-between px-2 text-xs border-b border-gray-100"
+        >
+          <span>{{ row.timeLabel }}</span>
+@if (vm$ | async; as vm) {
+  @if ($any(vm).symbols.length) {
+    <span>
+      {{ $any(vm).symbols[0] }} LTP:
+      {{ $any(vm).serverState[$any(vm).symbols[0]]?.ltp }}
+    </span>
+  }
+}
+
+        </div>
+      </cdk-virtual-scroll-viewport>
+
+      <button mat-stroked-button matStepperPrevious>Back</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

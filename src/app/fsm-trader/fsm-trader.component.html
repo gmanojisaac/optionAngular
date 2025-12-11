@@ -1,0 +1,16 @@
+<div class="p-4 space-y-4">
+  <h2 class="text-xl font-bold">FSM Trader</h2>
+  <div class="text-xs text-gray-500">
+    Paper/livesim never reach Zerodha; only mode="live" on server does.
+  </div>
+
+  @if (vm$ | async; as vm) {
+    @for (sym of vm.symbols; track sym) {
+      <app-fsm-symbol-panel
+        [symbol]="sym"
+        [serverState]="vm.serverState[sym]"
+        [clientState]="vm.clientState[sym]">
+      </app-fsm-symbol-panel>
+    }
+  }
+</div>

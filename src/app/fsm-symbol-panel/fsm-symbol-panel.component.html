@@ -1,0 +1,20 @@
+<div class="border rounded p-3 text-sm">
+  <h3 class="font-semibold mb-1">{{ symbol }}</h3>
+
+  @if (serverState && clientState) {
+    <div class="grid grid-cols-2 gap-1">
+      <div>LTP: {{ serverState.ltp }}</div>
+      <div>buyTh: {{ serverState.buyThreshold }}</div>
+      <div>lastBuyTh: {{ serverState.lastBuyThreshold }}</div>
+      <div>buyCond: {{ serverState.buyThresholdCondn }}</div>
+      <div>lastSignal: {{ serverState.lastSignal }}</div>
+      <div>reEnter: {{ serverState.reEnterBuyCondition }}</div>
+
+      <div>Pos: {{ clientState.positionState }}</div>
+      <div>Entry: {{ clientState.entryPrice }}</div>
+      <div>Realized: {{ clientState.realizedPnL | number: '1.2-2' }}</div>
+      <div>Session: {{ clientState.sessionPnL | number: '1.2-2' }}</div>
+      <div>Cum: {{ clientState.cumulativePnL | number: '1.2-2' }}</div>
+    </div>
+  }
+</div>

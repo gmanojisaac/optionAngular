@@ -1,0 +1,7 @@
+:host ::ng-deep .mat-mdc-input-element {
+  color: #e5e7eb !important;         /* slate-200 */
+}
+
+:host ::ng-deep .mat-mdc-input-element::placeholder {
+  color: #6b7280 !important;         /* slate-500 */
+}
